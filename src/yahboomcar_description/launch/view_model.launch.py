@@ -8,12 +8,10 @@ from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
 def generate_launch_description():
-    # נתיבים לקבצים
     urdf_tutorial_path = get_package_share_path('yahboomcar_description')
     default_model_path = urdf_tutorial_path / 'urdf/yahboomcar_M1.urdf.xacro'
     default_rviz_config_path = urdf_tutorial_path / 'rviz/yahboomcar.rviz'
 
-    # הגדרת ארגומנטים
     gui_arg = DeclareLaunchArgument(name='gui', default_value='true', choices=['true', 'false'],
                                     description='Flag to enable joint_state_publisher_gui')
     model_arg = DeclareLaunchArgument(name='model', default_value=str(default_model_path),
@@ -21,11 +19,9 @@ def generate_launch_description():
     rviz_arg = DeclareLaunchArgument(name='rvizconfig', default_value=str(default_rviz_config_path),
                                      description='Absolute path to rviz config file')
 
-    # עיבוד קובץ ה-URDF
     robot_description = ParameterValue(Command(['xacro ', LaunchConfiguration('model')]),
                                        value_type=str)
 
-    # הצמתים (Nodes) - רק אלו שקשורים לתצוגה
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
