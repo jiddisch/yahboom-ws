@@ -1,0 +1,8 @@
+# 请求定义
+string[] actions
+---
+# 结果定义
+bool success
+---
+# 反馈定义
+string status

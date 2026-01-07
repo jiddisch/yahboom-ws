@@ -1,0 +1,61 @@
+# --- ROS2 Standard Build Folders ---
+build/
+install/
+log/
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+*.egg-info/
+*.egg
+dist/
+
+# --- C++ / Compiled Libraries (חשוב מאוד להסרת ה-changes הנוכחיים) ---
+*.so
+*.a
+*.o
+*.obj
+*.lib
+*.dll
+
+# --- IDEs & System ---
+.vscode/
+.idea/
+.DS_Store
+*.swp
+*~
+
+# --- AI Models & Large Data ---
+*.pt
+*.pth
+*.onnx
+*.pb
+*.dat
+*.db
+*.model
+*.mvn
+*.tflite
+*.pbstream
+
+# --- Media & Archives ---
+*.mp4
+*.avi
+*.mov
+*.mp3
+*.wav
+*.zip
+*.tar.gz
+
+# --- Specific Generated/Log Folders from your tree ---
+Log/
+log.txt
+generated_images/
+resources_file/generated_images/
+
+# הערה: אם אתה רוצה לשמור את המפות (.pgm/.yaml), אל תוסיף אותן לכאן.
+# אם הן נוצרות אוטומטית ואין צורך לשמור, הוסף גם:
+# *.pgm
+# *.yaml

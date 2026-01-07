@@ -1,0 +1,21 @@
+<launch>
+  <arg name="robot_name" default="robot1"/>
+
+  <let name="lidar_type" value="$(env RPLIDAR_TYPE tmini)"/>
+  
+  <include file="$(find-pkg-share yahboomcar_multi)/launch/A1_bringup_multi.launch.xml">
+    <arg name="robot_name" value="$(var robot_name)"/>
+  </include>
+
+  <group if="$(eval '\'$(var lidar_type)\' == \'tmini\'')">
+    <include file="$(find-pkg-share yahboomcar_multi)/launch/tmini_multi.launch.xml">
+      <arg name="robot_name" value="$(var robot_name)"/>
+    </include>
+  </group>
+  
+  <group if="$(eval '\'$(var lidar_type)\' == \'c1\'')">
+    <include file="$(find-pkg-share yahboomcar_multi)/launch/c1_multi.launch.xml">
+      <arg name="robot_name" value="$(var robot_name)"/>
+    </include>
+  </group>
+</launch>
