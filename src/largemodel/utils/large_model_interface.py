@@ -1,4 +1,4 @@
-# 🔧 Cleaned import statements - only keep used imports / 清理后的导入语句 - 只保留实际使用的导入
+
 import dashscope
 from openai import OpenAI
 import os
@@ -32,9 +32,9 @@ import ssl
 
 xufei = ""
 Ws_Param = ""
-STATUS_FIRST_FRAME = 0  # 第一帧的标识
-STATUS_CONTINUE_FRAME = 1  # 中间帧标识
-STATUS_LAST_FRAME = 2  # 最后一帧的标识
+STATUS_FIRST_FRAME = 0  
+STATUS_CONTINUE_FRAME = 1  
+STATUS_LAST_FRAME = 2  
 
 record_speech_file = os.path.join(
     get_package_share_directory("largemodel"), "resources_file", "user_speech.wav"
@@ -42,7 +42,7 @@ record_speech_file = os.path.join(
 
 
 class Ws_Param(object):
-    # 初始化
+    
     def __init__(self, APPID, APIKey, APISecret, AudioFile):
 
         self.APPID = APPID
@@ -50,9 +50,9 @@ class Ws_Param(object):
         self.APISecret = APISecret
         self.AudioFile = AudioFile
 
-        # 公共参数(common)
+        
         self.CommonArgs = {"app_id": self.APPID}
-        # 业务参数(business)，更多个性化参数可在官网查看
+        
         self.BusinessArgs = {
             "domain": "iat",
             "language": "en_us",
@@ -61,18 +61,18 @@ class Ws_Param(object):
             "vad_eos": 10000,
         }
 
-    # 生成url
+    
     def create_url(self):
         url = "wss://ws-api.xfyun.cn/v2/iat"
-        # 生成RFC1123格式的时间戳
+        
         now = datetime.now()
         date = format_date_time(mktime(now.timetuple()))
 
-        # 拼接字符串
+        
         signature_origin = "host: " + "ws-api.xfyun.cn" + "\n"
         signature_origin += "date: " + date + "\n"
         signature_origin += "GET " + "/v2/iat " + "HTTP/1.1"
-        # 进行hmac-sha256进行加密
+        
         signature_sha = hmac.new(
             self.APISecret.encode("utf-8"),
             signature_origin.encode("utf-8"),
@@ -87,13 +87,13 @@ class Ws_Param(object):
         authorization = base64.b64encode(authorization_origin.encode("utf-8")).decode(
             encoding="utf-8"
         )
-        # 将请求的鉴权参数组合为字典
+        
         v = {"authorization": authorization, "date": date, "host": "ws-api.xfyun.cn"}
-        # 拼接鉴权参数，生成url
+        
         url = url + "?" + urlencode(v)
         return url
     
-# 收到websocket消息的处理
+
 def on_message(ws, message):
 
     try:
@@ -101,7 +101,7 @@ def on_message(ws, message):
         sid = json.loads(message)["sid"]
         if code != 0:
             errMsg = json.loads(message)["message"]
-            # print("sid:%s call error:%s code is:%s" % (sid, errMsg, code))
+            
         else:
             data = json.loads(message)["data"]["result"]["ws"]
 
@@ -116,34 +116,34 @@ def on_message(ws, message):
     except Exception as e:
         print("receive msg,but parse exception:", e)
 
-# 收到websocket错误的处理
+
 def on_error(ws, error):
-    print("### error:", error)
+    print("##
 
 
-# 收到websocket关闭的处理
+
 def on_close(ws, a, b):
-    # print("###speak iat closed ###")
+    
     return
 
-# 收到websocket连接建立的处理
+
 def on_open(ws):
     def run(*args):
-        frameSize = 8000  # 每一帧的音频大小
-        intervel = 0.04  # 发送音频间隔(单位:s)
+        frameSize = 8000  
+        intervel = 0.04  
         status = (
-            STATUS_FIRST_FRAME  # 音频的状态信息，标识音频是第一帧，还是中间帧、最后一帧
+            STATUS_FIRST_FRAME  
         )
 
         with open(wsParam.AudioFile, "rb") as fp:
             while True:
                 buf = fp.read(frameSize)
-                # 文件结束
+                
                 if not buf:
                     status = STATUS_LAST_FRAME
-                # 第一帧处理
-                # 发送第一帧音频，带business 参数
-                # appid 必须带上，只需第一帧发送
+                
+                
+                
                 if status == STATUS_FIRST_FRAME:
 
                     d = {
@@ -159,7 +159,7 @@ def on_open(ws):
                     d = json.dumps(d)
                     ws.send(d)
                     status = STATUS_CONTINUE_FRAME
-                # 中间帧处理
+                
                 elif status == STATUS_CONTINUE_FRAME:
                     d = {
                         "data": {
@@ -170,7 +170,7 @@ def on_open(ws):
                         }
                     }
                     ws.send(json.dumps(d))
-                # 最后一帧处理
+                
                 elif status == STATUS_LAST_FRAME:
                     d = {
                         "data": {
@@ -183,7 +183,7 @@ def on_open(ws):
                     ws.send(json.dumps(d))
                     time.sleep(1)
                     break
-                # 模拟音频采样间隔
+                
                 time.sleep(intervel)
         ws.close()
 
@@ -195,21 +195,21 @@ wsParam = ""
 pkg_path = os.path.expanduser("~/yahboom_ws/src/largemodel")
 XUNFEI_TTS_FILE = os.path.join(pkg_path, "resources_file", "XUNFEI_TTS.mp3")
 
-# XUNFEI_TTS_FILE = os.path.join(
-#     get_package_share_directory("largemodel"), "resources_file", "XUNFEI_TTS.mp3"
-# )
+
+
+
 
 class Ws_Param_1(object):
-    # 初始化 initialization
+    
     def __init__(self, APPID, APIKey, APISecret, Text):
         self.APPID = APPID
         self.APIKey = APIKey
         self.APISecret = APISecret
         self.Text = Text
 
-        # 公共参数(common)
+        
         self.CommonArgs = {"app_id": self.APPID}
-        # 业务参数(business)，更多个性化参数可在官网查看
+        
         self.BusinessArgs = {
             "aue": "lame",
             "sfl": 1,
@@ -223,21 +223,21 @@ class Ws_Param_1(object):
             "status": 2,
             "text": str(base64.b64encode(self.Text.encode("utf-8")), "UTF8"),
         }
-        # 使用小语种须使用以下方式，此处的unicode指的是 utf16小端的编码方式，即"UTF-16LE"”
-        # self.Data = {"status": 2, "text": str(base64.b64encode(self.Text.encode('utf-16')), "UTF8")}
+        
+        
 
-    # 生成url Generate URL
+    
     def create_url_1(self):
         url = "wss://tts-api.xfyun.cn/v2/tts"
-        # 生成RFC1123格式的时间戳 Generate timestamp in RFC1123 format
+        
         now = datetime.now()
         date = format_date_time(mktime(now.timetuple()))
 
-        # 拼接字符串 Splicing strings
+        
         signature_origin = "host: " + "ws-api.xfyun.cn" + "\n"
         signature_origin += "date: " + date + "\n"
         signature_origin += "GET " + "/v2/tts " + "HTTP/1.1"
-        # 进行hmac-sha256进行加密 Encrypt hmac-sha256
+        
         signature_sha = hmac.new(
             self.APISecret.encode("utf-8"),
             signature_origin.encode("utf-8"),
@@ -252,9 +252,9 @@ class Ws_Param_1(object):
         authorization = base64.b64encode(authorization_origin.encode("utf-8")).decode(
             encoding="utf-8"
         )
-        # 将请求的鉴权参数组合为字典 Combine the requested authentication parameters into a dictionary
+        
         v = {"authorization": authorization, "date": date, "host": "ws-api.xfyun.cn"}
-        # 拼接鉴权参数，生成url Splicing authentication parameters and generating URLs
+        
         url = url + "?" + urlencode(v)
         return url
 
@@ -267,9 +267,9 @@ def on_message_1(ws, message):
         audio = message["data"]["audio"]
         audio = base64.b64decode(audio)
         status = message["data"]["status"]
-        # print(message)
+        
         if status == 2:
-            # print("ws is closed")
+            
             ws.close()
         if code != 0:
             errMsg = message["message"]
@@ -281,16 +281,16 @@ def on_message_1(ws, message):
         print("receive msg,but parse exception:", e)
 
 
-# 收到websocket错误的处理 Handling of websocket errors received
+
 def on_error_1(ws, error):
-    print("### error:", error)
+    print("##
 
 
 def on_close_1(ws, close_status_code, close_msg):
     return
 
 
-# 收到websocket连接建立的处理 Received processing for establishing websocket connection
+
 def on_open_1(ws):
     def run(*args):
         d = {
@@ -299,7 +299,7 @@ def on_open_1(ws):
             "data": wsParam.Data,
         }
         d = json.dumps(d)
-        # print("------>开始发送文本数据")
+        
         ws.send(d)
         if os.path.exists(XUNFEI_TTS_FILE):
             os.remove(XUNFEI_TTS_FILE)
@@ -310,8 +310,8 @@ class model_interface:
     def __init__(self, llm_platform='ollama', logger=None, mcp_server=None):
         self.llm_platform = llm_platform
         self.client = None
-        self.logger = logger  # Save logger instance / 保存logger实例
-        self.mcp_server = mcp_server  # Save mcp_server instance / 保存mcp_server实例
+        self.logger = logger  
+        self.mcp_server = mcp_server  
         self.init_config_param()
         dashscope.api_key = self.tongyi_api_key
 
@@ -325,13 +325,13 @@ class model_interface:
         self.API_KEY = config_param.get("API_KEY")
 
         
-        # Tongyi Qianwen configuration / 通义千问配置
+        
         self.tongyi_api_key =config_param.get('tongyi_api_key')
         self.tongyi_base_url=config_param.get('tongyi_base_url')
         self.tongyi_model = config_param.get('tongyi_model')
         self.tongyi_media_model = config_param.get('tongyi_media_model', 'wanx-v1')
 
-        # iFlytek Spark configuration / 讯飞星火配置
+        
         self.spark_app_id = config_param.get('spark_app_id')
         self.spark_api_key = config_param.get('spark_api_key')
         self.spark_api_secret = config_param.get('spark_api_secret')
@@ -339,21 +339,21 @@ class model_interface:
         self.spark_model_url = config_param.get('spark_model_url')
         self.spark_media_model = config_param.get('spark_media_model', 'image_understanding')
 
-        # Baidu Qianfan configuration / 百度千帆配置
+        
         self.qianfan_api_key = config_param.get('qianfan_api_key')
         self.qianfan_base_url = config_param.get('qianfan_base_url')
         self.qianfan_model = config_param.get('qianfan_model')
         self.qianfan_media_model = config_param.get('qianfan_media_model', 'ernie-vilg-v2')
 
-        # OpenRouter configuration / OpenRouter配置
+        
         self.openrouter_api_key = config_param.get('openrouter_api_key')
         self.openrouter_model = config_param.get('openrouter_model')
 
-        # Ollama configuration / Ollama配置
+        
         self.ollama_host = config_param.get('ollama_host', 'http://localhost:11434')
         self.ollama_model = config_param.get('ollama_model', 'llava')
 
-        # ASR & TTS configuration / ASR & TTS 配置
+        
         self.oline_asr_model=config_param.get('oline_asr_model')
         self.zh_tts_model=config_param.get('zh_tts_model')
         self.zh_tts_json=config_param.get('zh_tts_json')
@@ -399,7 +399,7 @@ class model_interface:
         
     def init_messages(self):
         """General message history initialization. / 通用消息历史初始化。"""
-        # Directly use the internally saved mcp_server instance / 直接使用内部保存的 mcp_server 实例
+        
         self.messages = [
             {"role": "system", "content": self._generate_system_prompt(self.mcp_server)},
             {"role": "assistant", "content": self.system_text.get('text2', "I am ready.")}
@@ -411,44 +411,44 @@ class model_interface:
         动态生成系统级指令 (System Prompt)。
         """
         if not mcp_server:
-            # Return a minimal system prompt without any tool descriptions.
-            # /
-            # 返回一个最简单的、不包含任何工具描述的系统提示。
+            
+            
+            
             return "You are a helpful AI assistant."
 
         tools_description = mcp_server.get_tools_json_schema()
 
-        # Check if language is set to English
-        # 检查语言是否设置为英文
+        
+        
         is_english = hasattr(self, 'system_text') and 'text2' in self.system_text and 'Please start your instructions' in self.system_text['text2']
         
-        # Fallback check using the node's language setting
-        # 回退检查使用节点的语言设置
+        
+        
         if not is_english and hasattr(self, 'node') and hasattr(self.node, 'language'):
             is_english = self.node.language == 'en'
 
-        # Return a more flexible Prompt that supports conversation, with bilingual comments.
-        # /
-        # 返回一个更灵活、支持对话的Prompt，并附带双语注释。
+        
+        
+        
         if is_english:
-            # English version of the system prompt
-            # 英文版本的系统提示
-            # Generate tool definitions separately to avoid f-string nesting issues
+            
+            
+            
             
             return f'''You are the control hub for a robot, an AI capable of accurately converting natural language commands into JSON format, or engaging in natural conversation when no tools are available.
 
-# Primary Rule
+
 Your sole output must be a well-formed JSON object. Absolutely no text, explanations, or Markdown tags are allowed outside of the JSON.
 
-# Tool Definition
+
 The tools you can use are defined below. You must strictly adhere to their parameter schema:```json
 {json.dumps(tools_description, indent=2, ensure_ascii=False)}
 ```
 
-# Output Formats
+
 Based on the user's intent, choose the most appropriate of the following three JSON structures for your response:
 
-## Format 1: Direct Tool Call (For simple, explicit instructions)
+#
 ```json
 {{
   "response": "A confirmation or a brief reply to the user's command.",
@@ -463,7 +463,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 }}
 ```
 
-## Format 2: AI Agent Call (For complex, ambiguous, or multi-step instructions)
+#
 ```json
 {{
   "response": "Okay, this task requires some planning. Please wait a moment.",
@@ -477,7 +477,7 @@ Based on the user's intent, choose the most appropriate of the following three J
   ]
 }}```
 
-## Format 3: General Conversation (When no tools are applicable)
+#
 ```json
 {{
   "response": "This is the model's direct answer, e.g., for weather conditions, general knowledge questions, etc.",
@@ -485,7 +485,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 }}
 ```
 
-# Core Instructions & Logic
+
 
 1.  **Parameter Extraction**:
     *   **Mandatory**: You **must** find a value for every required argument of a tool.
@@ -500,7 +500,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 3.  **Response Content (`response` field)**:
     *   This field is used for natural language interaction with the user and should be concise and friendly.
 
-# Examples
+
 
 ```json
 {{
@@ -547,23 +547,23 @@ Based on the user's intent, choose the most appropriate of the following three J
 
 '''
         else:
-            # Chinese version of the system prompt (original)
-            # 中文版本的系统提示（原始版本）
+            
+            
             return f'''你是机器人的控制中枢，一个能将自然语言指令精确转换为JSON格式，或在无工具可用时进行自然对话的AI。
 
-# 首要规则
+
 你的唯一输出必须是一个结构完整的JSON对象。绝对禁止输出任何JSON之外的文本、解释或Markdown标记。
 
-# 工具定义
+
 你可使用的工具如下，请严格遵守其参数schema：
 ```json
 {json.dumps(tools_description, indent=2, ensure_ascii=False)}
 ```
 
-# 输出格式 / Output Formats
+
 根据用户意图，从以下三种JSON结构中选择最合适的一种进行回复：
 
-## 格式一：直接工具调用 (适用于简单、明确的指令)
+#
 ```json
 {{
   "response": "对用户指令的确认或简短回复。",
@@ -578,7 +578,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 }}
 ```
 
-## 格式二：调用AI Agent (适用于复杂、模糊或多步指令)
+#
 ```json
 {{
   "response": "好的，这个任务需要我规划一下，请稍候。",
@@ -593,7 +593,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 }}
 ```
 
-## 格式三：常规对话 (当没有工具适用时)
+#
 ```json
 {{
   "response": "这里是模型的直接回答，例如天气情况、常识问答等。",
@@ -601,7 +601,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 }}
 ```
 
-# 核心指令与逻辑
+
 
 1.  **参数提取:
     *   **强制性**: **必须**为工具的每一个必需参数（required arugments）找到一个值。
@@ -616,7 +616,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 3.  **回复内容 (`response`字段)**:
     *   此字段是用于与用户进行自然语言交互的，应简洁、友好。
 
-# 示例
+
 
 ```json
 {{
@@ -772,11 +772,11 @@ Based on the user's intent, choose the most appropriate of the following three J
             return "Tongyi client is not initialized."
         
         try:
-            # Use dashscope SDK for text-to-image call / 使用dashscope SDK进行文生图调用
+            
             import dashscope
             dashscope.api_key = self.tongyi_api_key
             
-            # Call text-to-image API / 调用文生图API
+            
             response = dashscope.ImageSynthesis.call(
                 model=self.tongyi_media_model,
                 prompt=prompt,
@@ -785,7 +785,7 @@ Based on the user's intent, choose the most appropriate of the following three J
             )
             
             if response.status_code == 200:
-                # Return the generated image URLs / 返回生成的图片URL
+                
                 image_urls = [item['url'] for item in response.output['results']]
                 return {'image_urls': image_urls, 'status': 'success'}
             else:
@@ -795,7 +795,7 @@ Based on the user's intent, choose the most appropriate of the following three J
     
     def _ollama_generate_image_fallback(self, prompt, width=1024, height=1024, n=1):
         """Fallback solution for text-to-image generation on the Ollama platform. / Ollama平台的文生图回退方案。"""
-        # Since Ollama does not support text-to-image, provide fallback information / 由于Ollama不支持文生图，提供回退信息
+        
         return {
             'status': 'failed',
             'error': 'Ollama does not support text-to-image generation.'
@@ -804,7 +804,7 @@ Based on the user's intent, choose the most appropriate of the following three J
 
     def text_to_image(self, prompt, width=1024, height=1024, n=1):
         """Independent text-to-image interface, specifically for generating images. / 独立的文生图接口，专门用于生成图像。"""
-        # Directly call the generate_image method / 直接调用generate_image方法
+        
         return self.generate_image(prompt, width, height, n)
 
     def infer_with_video(self, video_path, text=None, message=None):
@@ -839,7 +839,6 @@ Based on the user's intent, choose the most appropriate of the following three J
             image_data = self.encode_file_to_base64(image_path)
             messages[-1]['images'] = [image_data]
         elif video_path:
-            # For videos, extract keyframes for analysis / 对于视频，提取关键帧进行分析
             print(f"Starting to extract video frames: {video_path}")
             frame_images = self._extract_video_frames(video_path)
             if frame_images:
@@ -849,8 +848,6 @@ Based on the user's intent, choose the most appropriate of the following three J
                 print("Failed to extract video frames")
                 return "Error: Failed to extract frames from video"
 
-        # Check if tool call support is needed / 检查是否需要工具调用支持
-        # If it's video or image analysis, use normal mode to get a natural language description / 如果是视频或图像分析，使用普通模式获取自然语言描述
         if image_path or video_path:
             try:
                 response = self.client.chat(model=self.ollama_model, messages=messages)
@@ -858,17 +855,15 @@ Based on the user's intent, choose the most appropriate of the following three J
             except Exception as e:
                 return f"Ollama multimedia analysis failed: {e}"
         else:
-            # For text dialogues, try to use the tool call feature / 文本对话时尝试使用工具调用功能
             try:
                 response = self.client.chat(
                     model=self.ollama_model,
                     messages=messages,
-                    format='json'  # Request JSON format output to parse tool calls / 要求JSON格式输出以便解析工具调用
+                    format='json'  
                 )
                 return response['message']['content']
             except Exception as e:
                 print(f"Ollama tool call failed, falling back to normal mode: {e}")
-                # Fallback to normal mode / 回退到普通模式
                 try:
                     response = self.client.chat(model=self.ollama_model, messages=messages)
                     return response['message']['content']
@@ -912,7 +907,7 @@ Based on the user's intent, choose the most appropriate of the following three J
         
         new_content.append({"type": "text", "text": last_user_prompt})
         
-        # Create a new message list for this request to avoid modifying the original list / 创建一个新的消息列表用于本次请求，以避免修改原始列表
+        
         request_messages = messages[:-1] + [{"role": "user", "content": new_content}]
         
         model_map = {
@@ -920,7 +915,7 @@ Based on the user's intent, choose the most appropriate of the following three J
             'qianfan': self.qianfan_model,
             'openrouter': self.openrouter_model
         }
-        model_to_use = model_map.get(self.llm_platform, self.tongyi_model) # Default to Tongyi model / 默认为通义模型
+        model_to_use = model_map.get(self.llm_platform, self.tongyi_model) 
 
         completion = self.client.chat.completions.create(model=model_to_use, messages=request_messages)
         return completion.choices[0].message.content
@@ -1079,7 +1074,7 @@ Based on the user's intent, choose the most appropriate of the following three J
                 cap.release()
                 return None
 
-            # Calculate the interval for frame extraction / 计算要提取的帧的间隔
+            
             frame_interval = max(1, total_frames // max_frames)
             frame_images = []
 
@@ -1091,18 +1086,14 @@ Based on the user's intent, choose the most appropriate of the following three J
                 if not ret:
                     break
 
-                # Extract one frame every frame_interval frames / 每隔frame_interval帧提取一帧
                 if frame_count % frame_interval == 0:
-                    # Save the frame to a temporary file / 保存帧到临时文件
                     with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as temp_file:
                         temp_path = temp_file.name
                         cv2.imwrite(temp_path, frame)
 
-                        # Encode to base64 / 编码为base64
                         frame_base64 = self.encode_file_to_base64(temp_path)
                         frame_images.append(frame_base64)
 
-                        # Clean up the temporary file / 清理临时文件
                         os.unlink(temp_path)
 
                         extracted_count += 1
@@ -1122,11 +1113,11 @@ Based on the user's intent, choose the most appropriate of the following three J
         with open(file_path, "rb") as file:
             return base64.b64encode(file.read()).decode("utf-8")
 
-# 录完音，可以直接调用去识别 After recording the audio, it can be directly called for recognition
+
 def rec_wav_music_en():
     global xufei, wsParam
     xufei = ""
-    # time1 = datetime.now()
+    
     wsParam = Ws_Param(
         APPID="f12672f1",
         APISecret="NmUyYTRmNTM2MjE3OWJkMDczYzlhZDgz",
@@ -1146,7 +1137,6 @@ def rec_wav_music_en():
 
 def Xinghou_speaktts(context):
     global wsParam
-    # 测试时候在此处正确填写相关信息即可运行 Fill in the relevant information correctly here during testing to run
     wsParam = Ws_Param_1(
         APPID="f12672f1",
         APISecret="NmUyYTRmNTM2MjE3OWJkMDczYzlhZDgz",

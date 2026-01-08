@@ -17,8 +17,6 @@ setup(
         (os.path.join('share',package_name,'meshes/A1USBAckermann'),glob(os.path.join('meshes/A1USBAckermann','*.*'))),
         (os.path.join('share',package_name,'meshes/M1Mecanum'),glob(os.path.join('meshes/M1Mecanum','*.*'))),
         (os.path.join('share',package_name,'meshes/M1USBMecanum'),glob(os.path.join('meshes/M1USBMecanum','*.*'))),
-        #(os.path.join('share',package_name,'meshes/mecanum'),glob(os.path.join('meshes/mecanum','*.*'))),
-        #(os.path.join('share',package_name,'meshes'),glob(os.path.join('meshes','*.*'))),
         (os.path.join('share',package_name,'rviz'),glob(os.path.join('rviz','*.rviz*'))),
     ],
     install_requires=['setuptools'],

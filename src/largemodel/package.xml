@@ -10,7 +10,6 @@
   <build_depend>interfaces</build_depend>
   <exec_depend>interfaces</exec_depend>
 
-  <!-- System dependencies needed for Python packages -->
   <depend>build-essential</depend>
   <depend>cmake</depend>
   <depend>espeak-ng</depend>
