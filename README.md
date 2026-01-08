@@ -70,12 +70,14 @@ ros2 launch yahboomcar_description display_M1.launch.py
 
 פותח את **Gazebo**. כאן לרובוט יש פיזיקה, והוא יכול לנסוע במרחב.
 
-**1. הגדרת נתיבים (חובה לפני ההרצה):**
-כדי ש-Gazebo ימצא את המודלים התלת-ממדיים של הגלגלים והגוף, יש להריץ:
+**1. הגדרת נתיבים קבועה (חובה לביצוע פעם אחת):**
+כדי ש-Gazebo ימצא את המודלים הגרפיים (ולא יציג רובוט שקוף), יש להוסיף את נתיב הפרויקט לקובץ ההגדרות.
+הרץ פקודה זו פעם אחת בטרמינל:
 
 ```bash
+echo "export GAZEBO_MODEL_PATH=\$GAZEBO_MODEL_PATH:$HOME/git/yahboom-ws/src" >> ~/.bashrc
+source ~/.bashrc
 source /usr/share/gazebo/setup.sh
-export GAZEBO_MODEL_PATH=$GAZEBO_MODEL_PATH:$(pwd)/src
 ```
 
 **2. הרצת הסימולציה:**
