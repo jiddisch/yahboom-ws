@@ -25,7 +25,6 @@ setup(
     entry_points={
         'console_scripts': [
         'yahboom_keyboard	= yahboomcar_ctrl.yahboom_keyboard:main',
-        'yahboom_joy_A1	= yahboomcar_ctrl.yahboom_joy_A1:main',
         'yahboom_joy_M1	= yahboomcar_ctrl.yahboom_joy_M1:main',
         ],
     },

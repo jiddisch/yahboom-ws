@@ -138,3 +138,13 @@ files="src/path/to/file1.py src/path/to/file2.xml"; sep=""; for f in $files; do 
 ```bash
 tree -I "*A1*|*R2*|build|install|log|__pycache__|*.egg-info|site-packages|*.so|*.o|*.a|*.jpg|*.png|*.mp3|*.mp4|*.wav|*.STL|*.stl|*.dae|*.TTF|*.ttf|*.db|*.zip|*.onnx|*.pt|*.pb|*.pbstream|Thumbs.db|venv"
 ```
+
+## 5. ממשקים ותמיכה בבינה מלאכותית (AI & Interfaces)
+
+סביבת העבודה כוללת חבילות ממשקים מותאמות לתקשורת עם מודלים של שפה (LLM) ובינה מלאכותית:
+
+חבילת interfaces: מכילה הגדרות מורחבות עבור Gemini/Qwen כולל שירותי TextToImage.srv ושדות כגון llm_response בתוך Rot.action.
+
+חבילת yahboomcar_interfaces: גרסת היצרן הבסיסית.
+
+מבנה זה מאפשר לרובוט לקבל פקודות מורכבות בשפה טבעית ולדווח סטטוס בחזרה דרך ה-WiFi.

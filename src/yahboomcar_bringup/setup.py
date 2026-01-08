@@ -28,11 +28,6 @@ setup(
     },
     entry_points={
         'console_scripts': [
-        'Ackman_driver_A1	= yahboomcar_bringup.Ackman_driver_A1:main',
-        'calibrate_angular_A1 = yahboomcar_bringup.calibrate_angular_A1:main',
-        'calibrate_linear_A1 = yahboomcar_bringup.calibrate_linear_A1:main',
-        'patrol_A1 = yahboomcar_bringup.patrol_A1:main',
-        'A1_descri_Ackman_driver = yahboomcar_bringup.Ackman_driver_A1_descri:main',
         'Mcnamu_driver_M1	= yahboomcar_bringup.Mcnamu_driver_M1:main',
         'calibrate_angular_M1 = yahboomcar_bringup.calibrate_angular_M1:main',
         'calibrate_linear_M1 = yahboomcar_bringup.calibrate_linear_M1:main',
